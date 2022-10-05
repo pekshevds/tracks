@@ -1,17 +1,28 @@
+from flask import current_app
 import requests
 
 
 def weather_by_city(city_name):
-    url = "http://api.worldweatheronline.com/premium/v1/weather.ashx"
+    url = current_app.config['WEATHER_URL']
     params = {
-        'key': '3ee7edd3364d4635a6055621220410',
+        'key': current_app.config['WEATHER_API_KEY'],
         'q': city_name,
         'format': 'json', 
         'num_of_days': 1,
         'lang': 'ru'
     }
-    result = requests.get(url, params=params)
-    weather = result.json()
+    try:
+        result = requests.get(url, params=params)
+        result.raise_for_status()
+    except(requests.RequestException):
+        print("Сетевая ошибка")
+        return False
+
+    try:
+        weather = result.json()
+    except:
+        print("Ошибка разбора ответа")
+        return False
 
     if 'data' in weather:
         if 'current_condition' in weather['data']:
