@@ -2,6 +2,8 @@ import settings
 from random import choice, randint
 from emoji import emojize
 
+from telegram import ReplyKeyboardMarkup, keyboardbutton
+
 
 from clarifai_grpc.channel.clarifai_channel import ClarifaiChannel
 from clarifai_grpc.grpc.api import service_pb2_grpc, service_pb2, resources_pb2
@@ -53,6 +55,12 @@ def check_response_for_object(response, object_name):
     else:
         print(f"Ошибка распозновая картинки {response.outputs[0].status.details}")
     return False 
+
+
+def main_keyboard():
+    return ReplyKeyboardMarkup([
+        ['Заполнить анкету']
+    ])
 
 
 if __name__ == "__main__":
