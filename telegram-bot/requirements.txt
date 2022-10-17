@@ -3,3 +3,5 @@ emoji==2.1.0
 wheel==0.37.1
 setuptools==65.4.1
 clarifai-grpc==8.8.0
+pymongo==4.2.0
+dnspython==1.16.0

@@ -3,16 +3,20 @@ from utils import play_randon_numbers, get_smile, has_object_on_image
 from glob import glob
 import os
 
+from db import db, get_or_create_user
+
 def greet_user(update, context):
+
     print("Вызван /start")
-        
+    user = get_or_create_user(db, update.effective_user, update.message.chat_id)
+            
     smile = get_smile(context.user_data)
     context.user_data['emoji'] = smile
     update.message.reply_text(f"Здравствуй, пользователь {smile}!")
 
 
 def guess_number(update, context):
-    print(context.args)
+    user = get_or_create_user(db, update.effective_user, update.message.chat_id)
     if context.args:
         try:
             user_number = int(context.args[0])
@@ -25,6 +29,7 @@ def guess_number(update, context):
 
 
 def send_cat(update, context):
+    user = get_or_create_user(db, update.effective_user, update.message.chat_id)
     cat_photo_list = glob('images/cat*.jp*g')
     cat_pic_filename = choice(cat_photo_list)
     chat_id = update.effective_chat.id
@@ -32,8 +37,8 @@ def send_cat(update, context):
 
 
 def talk_to_me(update, context):    
-    text = update.message.text
-    print(text)
+    user = get_or_create_user(db, update.effective_user, update.message.chat_id)
+    text = update.message.text    
     smile = get_smile(context.user_data)
     context.user_data['emoji'] = smile
     update.message.reply_text(f"{text} {smile}")
