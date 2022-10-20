@@ -2,13 +2,13 @@ from getpass import getpass
 import sys
 
 from webapp import create_app
-from webapp.model import db, User
+from webapp.db import db, User
 
 app = create_app()
 with app.app_context():
 
     username = input('Введите имя')
-    if User.query.filter(User.username==username).count():
+    if User.query.filter(User.username == username).count():
         print('Пользователь с таким именем уже существует')
         sys.exit(0)
 
