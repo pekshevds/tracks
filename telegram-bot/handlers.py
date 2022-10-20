@@ -1,9 +1,10 @@
-from random import choice, randint
+from random import choice
 from utils import play_randon_numbers, get_smile, has_object_on_image
 from glob import glob
 import os
 
 from db import db, get_or_create_user
+
 
 def greet_user(update, context):
 
@@ -21,7 +22,7 @@ def guess_number(update, context):
         try:
             user_number = int(context.args[0])
             message = play_randon_numbers(user_number)
-        except(TypeError, ValueError):
+        except (TypeError, ValueError):
             message = "Выведите целое число"
     else:
         message = "Выведите целое число"

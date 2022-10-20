@@ -10,10 +10,9 @@ logging.basicConfig(filename='bot.log', level=logging.INFO)
 
 
 def main():
-    mybot = Updater(settings.API_KEY,use_context=True)
+    mybot = Updater(settings.API_KEY, use_context=True)
 
     dp = mybot.dispatcher
-
 
     anketa = ConversationHandler(
         entry_points=[
