@@ -27,8 +27,8 @@ class Employee(Base):
     phone = Column(String)
     email = Column(String)
     date_of_birth = Column(Date)
-    companies = relationship("Company")
-    payments = relationship("Payment")
+    companies = relationship("Company", lazy='joined')
+    payments = relationship("Payment", lazy='joined')
     
     def __repr__(self) -> str:
         return f"Employee id: {self.id}, name: {self.name}"
@@ -41,10 +41,39 @@ class Payment(Base):
     employee_id = Column(Integer, ForeignKey(Employee.id), index=True, nullable=False)    
     payment_date = Column(Date)
     ammount = Column(Integer)
-    employee = relationship("Employee")
+    employee = relationship("Employee", lazy='joined')
     
     def __repr__(self) -> str:
         return f"Payment id: {self.id}, date: {self.payment_date}"
+
+
+class Project(Base):
+    __tablename__ = "projects"
+
+    id = Column(Integer, primary_key=True)
+    company_id = Column(Integer, ForeignKey(Company.id), index=True, nullable=False)
+    name = Column(String)
+    company = relationship("Company", lazy="joined")
+    employees = relationship("ProjectEmployee")
+
+    def __repr__(self):
+        return f"Project id: {self.id} name: {self.name}"
+
+
+class ProjectEmployee(Base):
+    __tablename__ = "projects_employees"
+
+    id = Column(Integer, primary_key=True)
+    employee_id = Column(Integer, ForeignKey(Employee.id), index=True, nullable=False)
+    project_id = Column(Integer, ForeignKey(Project.id), index=True, nullable=False)
+    date_start = Column(Date)
+    date_end = Column(Date)
+    project = relationship("Project", lazy='joined')
+    employee = relationship("Employee", lazy='joined')
+
+    def __repr__(self):
+        return f"ProjectEmployee project: {self.project_id} employee: {self.employee_id}"
+
 
 
 if __name__ == "__main__":
