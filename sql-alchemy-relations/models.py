@@ -54,7 +54,7 @@ class Project(Base):
     company_id = Column(Integer, ForeignKey(Company.id), index=True, nullable=False)
     name = Column(String)
     company = relationship("Company", lazy="joined")
-    employees = relationship("ProjectEmployee")
+    employees = relationship("ProjectEmployee", lazy="joined")
 
     def __repr__(self):
         return f"Project id: {self.id} name: {self.name}"
@@ -73,7 +73,6 @@ class ProjectEmployee(Base):
 
     def __repr__(self):
         return f"ProjectEmployee project: {self.project_id} employee: {self.employee_id}"
-
 
 
 if __name__ == "__main__":
