@@ -1,8 +1,15 @@
 import logging
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, ConversationHandler)
-from anketa import anketa_start, anketa_name, anketa_rating, anketa_skip, anketa_comment, anketa_dontknow
-from handlers import greet_user, guess_number, send_cat, talk_to_me, check_user_photo
-
+from telegram.ext import (
+    Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
+    )
+from anketa import (
+    anketa_start, anketa_name, anketa_rating, anketa_skip, anketa_comment,
+    anketa_dontknow
+    )
+from handlers import (
+    greet_user, guess_number, send_cat, talk_to_me, check_user_photo
+    )
+from jobs import send_hello
 import settings
 
 
@@ -12,6 +19,9 @@ logging.basicConfig(filename='bot.log', level=logging.INFO)
 def main():
     mybot = Updater(settings.API_KEY, use_context=True)
 
+    jq = mybot.job_queue
+    jq.run_repeating(send_hello, interval=5)
+
     dp = mybot.dispatcher
 
     anketa = ConversationHandler(
@@ -20,14 +30,18 @@ def main():
         ],
         states={
             "name": [MessageHandler(Filters.text, anketa_name)],
-            "rating": [MessageHandler(Filters.regex('^(1|2|3|4|5)$'), anketa_rating)],
+            "rating": [
+                MessageHandler(Filters.regex('^(1|2|3|4|5)$'), anketa_rating)
+                ],
             "comment": [
                 CommandHandler("skip", anketa_skip),
                 MessageHandler(Filters.text, anketa_comment)
                 ]
         },
         fallbacks=[
-            MessageHandler(Filters.text | Filters.photo | Filters.video | Filters.document | Filters.location, anketa_dontknow)
+            MessageHandler(Filters.text | Filters.photo | Filters.video |
+                           Filters.document | Filters.location,
+                           anketa_dontknow)
         ]
     )
 
